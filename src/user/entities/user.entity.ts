@@ -11,7 +11,7 @@ import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
 
 @Entity({
   name: 'users',
-  schema: 'security',
+  // schema: 'security',
 })
 export class User {
   @PrimaryGeneratedColumn('uuid')
