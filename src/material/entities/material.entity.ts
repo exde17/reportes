@@ -1,4 +1,5 @@
 import { ConsumoMaterial } from 'src/consumo-material/entities/consumo-material.entity';
+import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -56,4 +57,5 @@ export class Material {
     name: 'updated_at',
   })
   updateAt: Date;
+
 }

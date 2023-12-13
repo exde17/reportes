@@ -1,4 +1,5 @@
 import { Material } from 'src/material/entities/material.entity';
+import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -39,17 +40,6 @@ export class ConsumoMaterial {
   })
   updateAt: Date;
 
-  // @Column('text', {
-  //   nullable: false,
-  //   name: 'data_materials',
-  // })
-  // materiales: any[];
-
-  //   @Column({
-  //     type: 'json',
-  //     nullable: true })
-  //   materials: any[];
-
   @OneToMany(() => Material, (material) => material.consumoMaterial)
   materials: Material[];
 
@@ -62,4 +52,10 @@ export class ConsumoMaterial {
     nullable: false,
   })
   store: string;
+
+  @Column('text',{
+    nullable: true,
+    name: 'id_tecnico'
+  })
+  idTecnico: User
 }

@@ -1,4 +1,4 @@
-import { IsArray, IsJSON, IsString } from 'class-validator';
+import { IsArray, IsJSON, IsString, IsUUID } from 'class-validator';
 
 export class CreateConsumoMaterialDto {
   @IsString()
@@ -16,4 +16,5 @@ export class CreateConsumoMaterialDto {
 
   @IsString()
   readonly store: string;
+
 }

@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+  <title>Acta Mantenimiento</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 5px;
+      text-align: left;
+    }
+    h1 {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Acta Mantenimiento</h1>
+  <h1>Datos del Tecnico</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Documento</th>
+        <th>Ciudad</th>
+        <th>Bodega</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each datos}}
+        <tr>
+          <td>{{this.nombre}}</td>
+          <td>{{this.documento}}</td>
+          <td>{{this.ciudad}}</td>
+          <td>{{this.bodega}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <h1>Material</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Cantidad</th>
+        <th>Unidad</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each materiales}}
+        <tr>
+          <td>{{this.codigo}}</td>
+          <td>{{this.nombre}}</td>
+          <td>{{this.cantidad}}</td>
+          <td>{{this.unidad}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</body>
+</html>
+
