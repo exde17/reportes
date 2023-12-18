@@ -30,14 +30,14 @@
       </tr>
     </thead>
     <tbody>
-      {{#each datos}}
+      
         <tr>
-          <td>{{this.nombre}}</td>
-          <td>{{this.documento}}</td>
-          <td>{{this.ciudad}}</td>
-          <td>{{this.bodega}}</td>
+          <td>{{datos.name}}</td>
+          <td>{{datos.document}}</td>
+          <td>{{datos.city}}</td>
+          <td>{{datos.store}}</td>
         </tr>
-      {{/each}}
+      
     </tbody>
   </table>
 
@@ -55,9 +55,9 @@
       {{#each materiales}}
         <tr>
           <td>{{this.codigo}}</td>
-          <td>{{this.nombre}}</td>
-          <td>{{this.cantidad}}</td>
-          <td>{{this.unidad}}</td>
+          <td>{{this.name}}</td>
+          <td>{{this.quantity}}</td>
+          <td>{{this.unit}}</td>
         </tr>
       {{/each}}
     </tbody>

@@ -53,9 +53,13 @@ export class ConsumoMaterialController {
   // }
 
   @Get('download')
-  async downloadPdf(@Res() res: Response) {
+  @Auth()
+  async downloadPdf(
+    @Res() res: Response,
+    @GetUser() user: User
+    ) {
     // const data = await this.getDataFromDatabase(); // tu método para obtener los datos
-    const pdfBuffer = await this.consumoMaterialService.generatePdf();
+    const pdfBuffer = await this.consumoMaterialService.generatePdf(user);
 
     res.set({
       'Content-Type': 'application/pdf',

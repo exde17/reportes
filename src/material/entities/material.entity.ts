@@ -42,7 +42,7 @@ export class Material {
     () => ConsumoMaterial,
     (consumoMaterial) => consumoMaterial.materials,
   )
-  consumoMaterial: ConsumoMaterial;
+  consumoMaterial: ConsumoMaterial; 
 
   @CreateDateColumn({
     type: 'timestamptz',

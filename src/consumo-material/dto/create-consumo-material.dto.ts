@@ -1,8 +1,8 @@
 import { IsArray, IsJSON, IsString, IsUUID } from 'class-validator';
 
 export class CreateConsumoMaterialDto {
-  @IsString()
-  readonly name: string;
+  // @IsString()
+  // readonly name: string;
 
   @IsString()
   readonly document: string;

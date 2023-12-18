@@ -26,7 +26,7 @@ export class ConsumoMaterialService {
     try {
       let dat = [];
       const materials = this.consumoMaterialRepository.create({
-        name: createConsumoMaterialDto.name,
+        name: user.firstName + ' ' + user.lastName, //createConsumoMaterialDto.name,
         document: createConsumoMaterialDto.document,
         // materials: createConsumoMaterialDto.materials,
         city: createConsumoMaterialDto.city,
@@ -106,34 +106,59 @@ export class ConsumoMaterialService {
   //   return Buffer.from(pdfBytes);
   // }
 
-  
-    async generatePdf(): Promise<Buffer> {
+  async generatePdf(user: User): Promise<Buffer> {
+    try {
+      // const datos = [
+      //   { nombre: 'John Doe', documento: '123456', ciudad: 'Ciudad X', bodega: 'Bodega A' },
+      //   // ... más objetos
+      // ];
+      // const materiales = [
+      //   { codigo: '001', nombre: 'Material 1', cantidad: 10, unidad: 'kg' },
+      //   // ... más objetos
+      // ];
+      // console.log('el id: ',user.id)
+      const datos = await this.consumoMaterialRepository.findOne({
+        where: { idTecnico: uuid.stringify(uuid.parse(user.id)) },
+      });
+      if (!datos) {
+        throw new Error(
+          'No se encontró ConsumoMaterial con el id proporcionado',
+        );
+      }
 
-      const datos = [
-        { nombre: 'John Doe', documento: '123456', ciudad: 'Ciudad X', bodega: 'Bodega A' },
-        // ... más objetos
-      ];
-      const materiales = [
-        { codigo: '001', nombre: 'Material 1', cantidad: 10, unidad: 'kg' },
-        // ... más objetos
-      ];
-      const templateHtml = fs.readFileSync(path.join(__dirname, '..', '..', 'src', 'util', 'template.hbs'), 'utf8');
+      console.log('el id de el consumo: ', datos);
+      const materiales = await this.materialRepository.find({
+        where: {
+          consumoMaterial: { idTecnico: uuid.stringify(uuid.parse(user.id)) },
+        },
+      });
+
+      if (materiales.length === 0) {
+        throw new Error('No se encontró Material con el id proporcionado');
+      }
+      const templateHtml = fs.readFileSync(
+        path.join(__dirname, '..', '..', 'src', 'util', 'template.hbs'),
+        'utf8',
+      );
 
       const template = handlebars.compile(templateHtml);
       const html = template({ datos, materiales });
-  
+
       const browser = await puppeteer.launch({
-        headless: "new"
+        headless: 'new',
       });
       const page = await browser.newPage();
-  
+
       await page.setContent(html);
-  
+
       const pdfBuffer = await page.pdf({ format: 'A4' });
-  
+
       await browser.close();
-  
+
       return pdfBuffer;
+    } catch (error) {
+      console.log(error);
+      return error;
     }
-  
+  }
 }
