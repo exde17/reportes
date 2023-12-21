@@ -12,7 +12,7 @@ import { MaterialModule } from './material/material.module';
       ssl: process.env.STAGE === 'prod',
       extra: {
         ssl:
-          process.env.STAGE === 'prod' ? { rejectUnauthorized: true } : null,
+          process.env.STAGE === 'prod' ? { rejectUnauthorized: false } : null,
       },
       type: 'postgres',
       host: process.env.DB_HOST,
