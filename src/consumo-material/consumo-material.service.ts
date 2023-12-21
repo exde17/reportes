@@ -12,6 +12,8 @@ import * as handlebars from 'handlebars';
 import * as fs from 'fs';
 import * as path from 'path';
 const uuid = require('uuid');
+import * as pdf from 'html-pdf';
+
 
 @Injectable()
 export class ConsumoMaterialService {
@@ -67,98 +69,103 @@ export class ConsumoMaterialService {
     }
   }
 
-  // findAll() {
-  //   return `This action returns all consumoMaterial`;
+  // async generatePdf(user: User): Promise<Buffer> {
+  //   try {
+     
+  //     const datos = await this.consumoMaterialRepository.findOne({
+  //       where: { idTecnico: uuid.stringify(uuid.parse(user.id)) },
+  //     });
+  //     if (!datos) {
+  //       throw new Error(
+  //         'No se encontró ConsumoMaterial con el id proporcionado',
+  //       );
+  //     }
+
+  //     console.log('el id de el consumo: ', datos);
+  //     const materiales = await this.materialRepository.find({
+  //       where: {
+  //         consumoMaterial: { idTecnico: uuid.stringify(uuid.parse(user.id)) },
+  //       },
+  //     });
+
+  //     if (materiales.length === 0) {
+  //       throw new Error('No se encontró Material con el id proporcionado');
+  //     }
+  //     const templateHtml = fs.readFileSync(
+  //       path.join(__dirname, '..', '..', 'src', 'util', 'template.hbs'),
+  //       'utf8',
+  //     );
+
+  //     const template = handlebars.compile(templateHtml);
+  //     const html = template({ datos, materiales });
+
+  //     const browser = await puppeteer.launch({
+  //       headless: 'new',
+  //     });
+  //     const page = await browser.newPage();
+
+  //     await page.setContent(html);
+
+  //     const pdfBuffer = await page.pdf({ format: 'A4' });
+
+  //     await browser.close();
+
+  //     return pdfBuffer;
+  //   } catch (error) {
+  //     console.log(error);
+  //     return error;
+  //   }
   // }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} consumoMaterial`;
-  // }
+//   const fs = require('fs');
+// const path = require('path');
+// const handlebars = require('handlebars');
+// const uuid = require('uuid');
+// const pdf = require('html-pdf');
 
-  // update(id: number, updateConsumoMaterialDto: UpdateConsumoMaterialDto) {
-  //   return `This action updates a #${id} consumoMaterial`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} consumoMaterial`;
-  // }
-
-  // async generatePdf(data: string): Promise<Buffer> {
-  //   // Crear un nuevo documento PDF
-  //   const pdfDoc = await PDFDocument.create();
-
-  //   // Añadir una página al PDF
-  //   const page = pdfDoc.addPage();
-
-  //   // Escribir texto en la página
-  //   const { width, height } = page.getSize();
-  //   const fontSize = 30;
-  //   page.drawText(data, {
-  //     x: 50,
-  //     y: height - 4 * fontSize,
-  //     size: fontSize,
-  //     color: rgb(0, 0, 0),
-  //   });
-
-  //   // Serializar el PDFDocument a bytes (un Buffer de Node.js)
-  //   const pdfBytes = await pdfDoc.save();
-
-  //   return Buffer.from(pdfBytes);
-  // }
-
-  async generatePdf(user: User): Promise<Buffer> {
+async generatePdf(user: User): Promise<Buffer> {
     try {
-      // const datos = [
-      //   { nombre: 'John Doe', documento: '123456', ciudad: 'Ciudad X', bodega: 'Bodega A' },
-      //   // ... más objetos
-      // ];
-      // const materiales = [
-      //   { codigo: '001', nombre: 'Material 1', cantidad: 10, unidad: 'kg' },
-      //   // ... más objetos
-      // ];
-      // console.log('el id: ',user.id)
-      const datos = await this.consumoMaterialRepository.findOne({
-        where: { idTecnico: uuid.stringify(uuid.parse(user.id)) },
-      });
-      if (!datos) {
-        throw new Error(
-          'No se encontró ConsumoMaterial con el id proporcionado',
+        const datos = await this.consumoMaterialRepository.findOne({
+            where: { idTecnico: uuid.stringify(uuid.parse(user.id)) },
+        });
+        if (!datos) {
+            throw new Error('No se encontró ConsumoMaterial con el id proporcionado');
+        }
+
+        console.log('el id de el consumo: ', datos);
+        const materiales = await this.materialRepository.find({
+            where: {
+                consumoMaterial: { idTecnico: uuid.stringify(uuid.parse(user.id)) },
+            },
+        });
+
+        if (materiales.length === 0) {
+            throw new Error('No se encontró Material con el id proporcionado');
+        }
+
+        const templateHtml = fs.readFileSync(
+            path.join(__dirname, '..', '..', 'src', 'util', 'template.hbs'),
+            'utf8',
         );
-      }
 
-      console.log('el id de el consumo: ', datos);
-      const materiales = await this.materialRepository.find({
-        where: {
-          consumoMaterial: { idTecnico: uuid.stringify(uuid.parse(user.id)) },
-        },
-      });
+        const template = handlebars.compile(templateHtml);
+        const html = template({ datos, materiales });
 
-      if (materiales.length === 0) {
-        throw new Error('No se encontró Material con el id proporcionado');
-      }
-      const templateHtml = fs.readFileSync(
-        path.join(__dirname, '..', '..', 'src', 'util', 'template.hbs'),
-        'utf8',
-      );
+        const options = { format: 'A4' };
 
-      const template = handlebars.compile(templateHtml);
-      const html = template({ datos, materiales });
-
-      const browser = await puppeteer.launch({
-        headless: 'new',
-      });
-      const page = await browser.newPage();
-
-      await page.setContent(html);
-
-      const pdfBuffer = await page.pdf({ format: 'A4' });
-
-      await browser.close();
-
-      return pdfBuffer;
+        return new Promise((resolve, reject) => {
+            pdf.create(html, options).toBuffer(function(err, buffer) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(buffer);
+                }
+            });
+        });
     } catch (error) {
-      console.log(error);
-      return error;
+        console.log(error);
+        throw error; // Es mejor lanzar el error de nuevo para manejarlo más arriba en la cadena de llamadas
     }
-  }
+}
+
 }
