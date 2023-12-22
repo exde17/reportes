@@ -9,7 +9,7 @@ import { MaterialModule } from './material/material.module';
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
-      ssl: process.env.STAGE === 'prod' ? false : true,
+      ssl: process.env.STAGE === 'prod', //? false : true,
       extra: {
         ssl:
           process.env.STAGE === 'prod' ? { rejectUnauthorized: false } : null,
